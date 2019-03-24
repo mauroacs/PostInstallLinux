@@ -1,13 +1,14 @@
 #!/bin/bash
-
-
+#
+#	CODIGO ADAPTADO POR MAURO ADRIANO CAVALHEIRO SIQUEIRA  PRESENTE NA APOSTILA DE SHELLSCRIPT DO AURELIO
+#
 # dependencia do dialog para funcionar
 sudo apt-get install dialog
 #Versão do Script
 versao=01.00
 #Armazena a data da ultima modificação do script
 datamod=`date -r script.sh`
-
+#FUNÇÃO PARA CONTAR O TEMPO, FUNÇÃO AUXILIAR PARA USO INTERNO NO SCRIPT ( NESTE EXEMPLO, i=2 temos uma contagem de 2 segundos )
 tempo() {
 	echo
     for (( i=2; i>0; i--)); do
@@ -16,7 +17,7 @@ tempo() {
     done
 	cd ~
 }
-
+#AQUI APENAS UM EXEMPLO DE FUNÇÃO QUE SERA CHAMADA NO MENU DE OPÇÕES
 update_script() {
 	sudo apt-get clean && sudo apt-get update && sudo apt-get upgrade -y  -f 
 }
@@ -51,9 +52,9 @@ showlogupdate() {
     }
 
 function display_output(){
-	local h=${1-10}			# box height default 10
-	local w=${2-41} 		# box width default 41
-	local t=${3-Output} 	# box title 
+	local h=${1-10}	# box height default 10
+	local w=${2-41} # box width default 41
+	local t=${3-Output} # box title 
 	dialog --backtitle "LINUX SAÚDE - CONFIGURADOR DE AMBIENTE DO USUÁRIO" --title "${t}" --clear --msgbox "$(<$OUTPUT)" ${h} ${w}
 }
 
@@ -68,8 +69,8 @@ while true
 do
 
 ### display main menu ###
-dialog --clear  --help-button --backtitle "LINUX SAÚDE - CONFIGURADOR DE AMBIENTE DO USUÁRIO" \
---title "[ LINUX SAÚDE - CONFIGURADOR DE AMBIENTE DO USUÁRIO ]" \
+dialog --clear  --help-button --backtitle "CONFIGURADOR DE AMBIENTE DO USUÁRIO" \
+--title "[ CONFIGURADOR DE AMBIENTE DO USUÁRIO ]" \
 --menu "
 \n  Ultima Atualização: `date +%d/%m/%Y`mod
 \n  Última selecionada: $menuitem
