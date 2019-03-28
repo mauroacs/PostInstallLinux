@@ -15,11 +15,11 @@ tempo() {
 	sleep 1 &  printf "POR FAVOR AGUARDE ... $i \r"
 	wait
     done
-	cd ~
+	cd ~ 
 }
 #AQUI APENAS UM EXEMPLO DE FUNÇÃO QUE SERA CHAMADA NO MENU DE OPÇÕES
 update_script() {
-	sudo apt-get clean && sudo apt-get update && sudo apt-get upgrade -y  -f 
+	pkill postinstalllinux.sh && ./postinstalllinux
 }
 
 # Armazena a opção selecionada pelo usuario no menu
@@ -31,9 +31,9 @@ OUTPUT=/tmp/output.sh.$$
 DATA=`date +%d/%m/%Y`
 HORA=`date +%H:%M:%S`
 
-TECNICO=$( dialog --inputbox "Nome do Tecnico que ira atualizar o Sistema: " 10 30 --stdout )
+# Exemplo de caixa de dialogo para ler informação para uma variavel
+# TECNICO=$( dialog --inputbox "Nome do Tecnico que ira atualizar o Sistema: " 10 30 --stdout )
 
-sudo echo "O sistema foi acessado por $TECNICO em `date +%d/%m/%Y` às `date +%H:%M:%S` " >> /opt/saude/logUpdate 
 # trap and delete temp files
 trap "rm $OUTPUT; rm $INPUT; exit" SIGHUP SIGINT SIGTERM
 
@@ -55,7 +55,7 @@ function display_output(){
 	local h=${1-10}	# box height default 10
 	local w=${2-41} # box width default 41
 	local t=${3-Output} # box title 
-	dialog --backtitle "LINUX SAÚDE - CONFIGURADOR DE AMBIENTE DO USUÁRIO" --title "${t}" --clear --msgbox "$(<$OUTPUT)" ${h} ${w}
+	dialog --backtitle "CONFIGURADOR DE AMBIENTE DO USUÁRIO" --title "${t}" --clear --msgbox "$(<$OUTPUT)" ${h} ${w}
 }
 
 #DEFALUT COLOR
@@ -72,11 +72,10 @@ do
 dialog --clear  --help-button --backtitle "CONFIGURADOR DE AMBIENTE DO USUÁRIO" \
 --title "[ CONFIGURADOR DE AMBIENTE DO USUÁRIO ]" \
 --menu "
-\n  Ultima Atualização: `date +%d/%m/%Y`mod
+\n  Ultima Atualização: `date +%d/%m/%Y` 
 \n  Última selecionada: $menuitem
-\n     Versao do Linux: `uname -o` - $plataform bits
-\n    Versao do Script: $versao  
-\n      Técnico Online: $TECNICO
+\n     Versao do Linux: `cat /etc/lsb-release | grep DESCR | awk -F= '{ print $2 }'`
+\n    Versao do Script: $versao
 \n\n                  Escolha uma tarefa" 25 80 11 \
 Exit "Exit to the shell" 2>"${INPUT}" \
 0 "AUTO ATUALIZAR SCRIPT" \
@@ -89,6 +88,5 @@ case $menuitem in
   0) update_script;;
   Exit)echo ""; break;;
 esac
-
 
 done
